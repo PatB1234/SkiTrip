@@ -1,2 +1,2 @@
 # SkiTrip
-A project Made in C# For School. Details will be in ReadMe
+A project Made in C# For School. Details Are Below
