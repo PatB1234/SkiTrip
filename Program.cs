@@ -48,7 +48,7 @@ class Program
                 Console.ReadKey();
                 Console.Clear();
             }
-        } while (attempts != 0); 
+        } while (attempts != 0);
     }
 
     public static void mainMenu()
@@ -63,7 +63,8 @@ class Program
         Console.WriteLine("4. View students in each group");
         Console.WriteLine("5. View quiz scores");
         Console.WriteLine("6. View student detail by ID");
-        Console.WriteLine("7. Exit Portal");
+        Console.WriteLine("7. View Student details in ascending order");
+        Console.WriteLine("8. Exit Portal");
         string choice = Console.ReadLine();
 
         if (choice == "1")
@@ -95,14 +96,14 @@ class Program
         }
         else if (choice == "5")
         {
-            
+
             Console.Clear();
             Console.WriteLine("Here are the quiz scores");
             getQuizScores();
         }
         else if (choice == "6")
         {
-            
+
             Console.Clear();
             Console.WriteLine("What is the id of the pupil");
             getStudentDetailsByID(Console.ReadLine());
@@ -110,23 +111,28 @@ class Program
         else if (choice == "7")
         {
 
+            viewStudentDetailsAscendingOrder();
+        }
+        else if (choice == "8")
+        {
+
             Console.WriteLine("Bye bye!");
             Environment.Exit(0);
         }
     }
-    
+
     public static void quizGame()
     {
 
         Console.WriteLine("Please put in the Pupil's ID: ");
         string id = Console.ReadLine();
         string name = null;
-        
+
         string[] lines = File.ReadAllLines("../../../PupilSkiTimes.txt");
 
         for (int i = 0; i < lines.Length; i++)
         {
-            
+
             string[] splitStudentDetails = lines[i].Split("|");
 
             if (splitStudentDetails[9] == id)
@@ -135,14 +141,14 @@ class Program
                 name = splitStudentDetails[0];
             }
         }
-        
+
         Console.WriteLine($"User forename: {name}");
 
         //Console.Clear();
 
         int score = 0;
-        string[] questions = new string[] { "Largest planet ? ", "Worse song ever ? ", "Capital of Peru?", "Roman god of War ?" };
-        string[] answers = new string[] { "Jupiter", "Castles in the Sky", "Lima", "Mars" };
+        string[] questions = new string[] { "Largest planet ? ", "Worse song ever ? ", "Capital of Peru?", "Roman god of War ?", "What is the currency of Denmark?", "What band was Harry Styles in before his solo career?" };
+        string[] answers = new string[] { "Jupiter", "Castles in the Sky", "Lima", "Mars", "Krone", "One Direction" };
 
         Random random = new Random();
 
@@ -166,10 +172,10 @@ class Program
                 Console.WriteLine("Wrong");
             }
         }
-        
+
         using (StreamWriter writer = new StreamWriter("../../../PupilQuizScores.txt", true))
         {
-            
+
             writer.Write($"{id}|{name}|{score}");
             writer.Write(Environment.NewLine);
             writer.Flush();
@@ -185,14 +191,14 @@ class Program
 
     public static string getPreviousID()
     {
-        
+
         string[] lines = File.ReadAllLines("../../../PupilSkiTimes.txt");
-        string[] splitStudentDetails = lines[lines.Length-1].Split("|");
+        string[] splitStudentDetails = lines[lines.Length - 1].Split("|");
 
         string id = splitStudentDetails[9];
         return id;
     }
-    
+
     public static void addStudentDetails()
     {
         Console.WriteLine("Enter User forename");
@@ -220,7 +226,7 @@ class Program
 
         string group = null;
 
-        int pupilID = int.Parse(getPreviousID())+1;
+        int pupilID = int.Parse(getPreviousID()) + 1;
 
         if (averageSkiTime < 15)
         {
@@ -302,11 +308,13 @@ class Program
             {
 
                 beginner[i] = ($"{splitStudentDetails[0]} {splitStudentDetails[1]}");
-            } else if (splitStudentDetails[8] == "Advanced")
+            }
+            else if (splitStudentDetails[8] == "Advanced")
             {
 
                 advanced[i] = ($"{splitStudentDetails[0]} {splitStudentDetails[1]}");
-            } else if (splitStudentDetails[8] == "Intermediate")
+            }
+            else if (splitStudentDetails[8] == "Intermediate")
             {
 
                 intermediate[i] = ($"{splitStudentDetails[0]} {splitStudentDetails[1]}");
@@ -354,7 +362,7 @@ class Program
 
         for (int i = 0; i < lines.Length; i++)
         {
-            
+
             string[] splitStudentDetails = lines[i].Split("|");
             Console.WriteLine($"Pupil ID: {splitStudentDetails[0]}");
             Console.WriteLine($"Pupil Forename: {splitStudentDetails[1]}");
@@ -362,7 +370,7 @@ class Program
             Console.WriteLine("\n");
             Console.WriteLine("\n");
         }
-        
+
         Console.WriteLine("Hit Enter to go back to the main Menu");
         Console.ReadKey();
         mainMenu();
@@ -370,17 +378,17 @@ class Program
 
     public static void getStudentDetailsByID(string id)
     {
-        
+
         string[] quizScores = File.ReadAllLines("../../../PupilQuizScores.txt");
         string[] SkiTimes = File.ReadAllLines("../../../PupilSkiTimes.txt");
 
         for (int i = 0; i < SkiTimes.Length; i++)
         {
-            
+
             string[] splitStudentDetails = SkiTimes[i].Split("|");
             if (splitStudentDetails[9] == id)
             {
-                
+
                 Console.WriteLine($"Forename: {splitStudentDetails[0]}");
                 Console.WriteLine($"Lastname: {splitStudentDetails[1]}");
                 Console.WriteLine($"Ski time 1: {splitStudentDetails[2]}");
@@ -395,16 +403,73 @@ class Program
 
         for (int i = 0; i < quizScores.Length; i++)
         {
-            
+
             string[] splitStudentDetails = quizScores[i].Split("|");
             if (splitStudentDetails[0] == id)
             {
-                
+
                 Console.WriteLine($"Quiz Score: {splitStudentDetails[2]}");
                 Console.WriteLine($"User ID: {splitStudentDetails[0]}");
             }
         }
-        
+
+        Console.WriteLine("Hit Enter to go back to the main Menu");
+        Console.ReadKey();
+        mainMenu();
+    }
+
+    public static void viewStudentDetailsAscendingOrder()
+    {
+        string[] studentDetails = File.ReadAllLines("../../../PupilSkiTimes.txt");
+
+        int[] arr = new int[studentDetails.Length];
+
+
+        for (int i = 0;i < studentDetails.Length;i++)
+        {
+
+            string[] splitStudentDetails = studentDetails[i].Split("|");
+            arr[i] = int.Parse(splitStudentDetails[7]);
+        }
+
+        int temp = 0;
+
+        for (int write = 0; write < arr.Length; write++)
+        {
+            for (int sort = 0; sort < arr.Length - 1; sort++)
+            {
+                if (arr[sort] > arr[sort + 1])
+                {
+                    temp = arr[sort + 1];
+                    arr[sort + 1] = arr[sort];
+                    arr[sort] = temp;
+                }
+            }
+        }
+
+        Console.WriteLine("Here is the average Ski Time of each student");
+
+        for (int i = 0; i < arr.Length; i++) {
+
+            for (int j = 0; j < studentDetails.Length; j++)
+            {
+
+
+                string[] splitStudentDetails = studentDetails[j].Split("|");
+
+                if (int.Parse(splitStudentDetails[7]) == arr[i])
+                {
+
+                    Console.WriteLine($"Student forename: {splitStudentDetails[0]}");
+                    Console.WriteLine($"Average student time: {arr[i]}");
+                    Console.WriteLine(Environment.NewLine);
+                    Console.WriteLine(Environment.NewLine);
+                    Console.WriteLine(Environment.NewLine);
+                }
+            }
+        }
+
+
         Console.WriteLine("Hit Enter to go back to the main Menu");
         Console.ReadKey();
         mainMenu();
